@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "Parallel-Programmeren-project-Olivier"
+version = "0.0.0"
+description = "<Enter a one-sentence description of this project here.>"
+authors = ["Olivier Puimege <olivier.puimege@uantwerpen.be>"]
+license = "MIT"
+
+readme = 'README.rst'
+
+repository = "https://github.com/OlivierPuimege/Parallel-Programmeren-project-Olivier"
+homepage = "https://github.com/OlivierPuimege/Parallel-Programmeren-project-Olivier"
+
+keywords = ['packaging', 'poetry']
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^4.4.2"
+
+[tool.poetry.scripts]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
