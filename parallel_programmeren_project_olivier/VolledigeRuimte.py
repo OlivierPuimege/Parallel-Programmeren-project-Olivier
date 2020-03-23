@@ -17,10 +17,10 @@ class VolledigeRuimte:
 
     def printDeXCoordinaten(self):
         #Dit print de 'aangepaste' x-coördinaten. Puur een testfunctie.
-        x = 0
+        iterator = 0
         for i in self.lijstMetAtomen:
-            self.lijstMetAtomen[x].testfunctie()
-            x += 1
+            self.lijstMetAtomen[iterator].testfunctie()
+            iterator += 1
         #self.lijstMetAtomen.
 
     def LennardJonesPotentiaal(self, Atoom1, Atoom2): #Deze functie moet misschien verhuizen als bij het optimaliseren
