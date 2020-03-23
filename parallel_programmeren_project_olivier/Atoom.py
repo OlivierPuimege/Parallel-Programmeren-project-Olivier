@@ -13,3 +13,12 @@ class Atoom:
         "Deze functie telt 1 op bij de waarde van x en geeft de waarde van x weer. Deze dient enkel om de klasse te testen"
         self.x += 1
         print("x = " + str(self.x))
+
+    def getx(self):
+        return self.x
+
+    def gety(self):
+        return self.y
+
+    def getz(self):
+        return self.z
