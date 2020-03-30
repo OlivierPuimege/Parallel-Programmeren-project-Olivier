@@ -5,7 +5,7 @@ Package parallel_programmeren_project_olivier
 
 A 'hello world' example.
 """
-__version__ = "0.3.3"
+__version__ = "0.3.4"
 
 
 def hello(who='world'): #Laten staan voor debug
