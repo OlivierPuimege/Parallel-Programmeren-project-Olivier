@@ -5,7 +5,48 @@ Package parallel_programmeren_project_olivier
 
 A 'hello world' example.
 """
-__version__ = "0.3.5"
+__version__ = "0.3.6"
+
+try:
+    import parallel_programmeren_project_olivier.lijstvanatomen
+except ModuleNotFoundError as e:
+    # Try to build this binary extension:
+    from pathlib import Path
+    import click
+    from et_micc_build.cli_micc_build import auto_build_binary_extension
+    msg = auto_build_binary_extension(Path(__file__).parent, 'lijstvanatomen')
+    if not msg:
+        import parallel_programmeren_project_olivier.lijstvanatomen
+    else:
+        click.secho(msg, fg='bright_red')
+
+
+
+try:
+    import parallel_programmeren_project_olivier.bar
+except ModuleNotFoundError as e:
+    # Try to build this binary extension:
+    from pathlib import Path
+    import click
+    from et_micc_build.cli_micc_build import auto_build_binary_extension
+    msg = auto_build_binary_extension(Path(__file__).parent, 'bar')
+    if not msg:
+        import parallel_programmeren_project_olivier.bar
+    else:
+        click.secho(msg, fg='bright_red')
+
+try:
+    import parallel_programmeren_project_olivier.foo
+except ModuleNotFoundError as e:
+    # Try to build this binary extension:
+    from pathlib import Path
+    import click
+    from et_micc_build.cli_micc_build import auto_build_binary_extension
+    msg = auto_build_binary_extension(Path(__file__).parent, 'foo')
+    if not msg:
+        import parallel_programmeren_project_olivier.foo
+    else:
+        click.secho(msg, fg='bright_red')
 
 
 def hello(who='world'): #Laten staan voor debug
