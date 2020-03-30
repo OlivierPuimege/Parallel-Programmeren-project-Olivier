@@ -5,7 +5,7 @@ Package parallel_programmeren_project_olivier
 
 A 'hello world' example.
 """
-__version__ = "0.3.6"
+__version__ = "0.3.7"
 
 try:
     import parallel_programmeren_project_olivier.lijstvanatomen
