@@ -10,12 +10,10 @@ class LijstVanAtomen:
     #LijstVanAtomen = np.arange(0) #misschien niet nodig
 
     def __init__(self, aantal): #aantal is het aantal atomen.
-        self.lijstVanAtomen = np.arange(0)
 
-        for iterator in range(aantal):
-            nieuwAtoom = np.random.rand(1,3)
-            self.lijstVanAtomen = np.append(self.lijstVanAtomen,nieuwAtoom)
-            iterator += 1
+        self.lijstVanAtomen = np.random.rand(aantal,3)
+
+        print(self.lijstVanAtomen)
 
     def afstandTussenTweeAtomen(self,atoomnummer):
 
@@ -29,3 +27,5 @@ class LijstVanAtomen:
 
         return math.sqrt(math.pow((x1 - x2), 2) + math.pow((y1 - y2), 2) + math.pow((z1 - z2), 2))
 
+
+aaa = LijstVanAtomen(5)
