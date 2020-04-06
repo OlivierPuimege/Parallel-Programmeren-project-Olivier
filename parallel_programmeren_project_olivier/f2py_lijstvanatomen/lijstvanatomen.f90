@@ -42,7 +42,7 @@ subroutine loopOverDeLijst(lijstVanAtomen,lengteLijst,dummy)
 
 	do atoom1=1,lengteLijst
 		do atoom2=1,lengteLijst
-			if (atoom1 != atoom2) then
+			if (atoom1 /= atoom2) then
 				roep de Lennard-Jones potentiaal op van de pythonklasse lj.py
 			else 
 				pass
