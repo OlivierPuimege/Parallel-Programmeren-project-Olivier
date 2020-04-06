@@ -32,6 +32,7 @@ class LijstVanAtomen:
         x2 = self.lijstVanAtomen[atoom2,0]
         y2 = self.lijstVanAtomen[atoom2,1]
         z2 = self.lijstVanAtomen[atoom2,2]
+        print(math.sqrt(math.pow((x1 - x2), 2) + math.pow((y1 - y2), 2) + math.pow((z1 - z2), 2)))
 
         return math.sqrt(math.pow((x1 - x2), 2) + math.pow((y1 - y2), 2) + math.pow((z1 - z2), 2))
 
@@ -67,3 +68,5 @@ aaa = LijstVanAtomen(5)
 print("test van getAtoom")
 print(aaa.getAtoom(1))
 aaa.pertuberen()
+print("De afstand is:")
+aaa.afstandTussenTweeAtomen(1,2)
