@@ -14,7 +14,7 @@ import scipy.constants as sc
 
 
 class LijstVanAtomen:
-    """Dit is de klasse atoom, omdat we enkel Lennard-Jones potentialen gaan gebruiken moet deze enkel positites hebben."""
+    """Dit is de klasse LijstVanAtomen, omdat we enkel Lennard-Jones potentialen gaan gebruiken moet deze enkel positites hebben."""
 
 
     def __init__(self, aantal): #aantal is het aantal atomen.
@@ -24,6 +24,7 @@ class LijstVanAtomen:
         print(self.lijstVanAtomen)
 
     def afstandTussenTweeAtomen(self,atoom1,atoom2):
+	"""Deze functie blijft voorlopig staan maar zal in fortran uitgevoerd worden."""
 
         x1 = self.lijstVanAtomen[atoom1,0]
         y1 = self.lijstVanAtomen[atoom1,1]
@@ -37,6 +38,7 @@ class LijstVanAtomen:
         return math.sqrt(math.pow((x1 - x2), 2) + math.pow((y1 - y2), 2) + math.pow((z1 - z2), 2))
 
     def pertuberen(self):
+	"""Deze functie zal naar fortran moeten verhuizen"""
 
         KbT = 273*sc.Boltzmann #constante van boltzmann maal temperatuur
 

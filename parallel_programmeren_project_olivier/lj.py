@@ -25,9 +25,9 @@ class LJ:
         z2 = Atoom2.getz()
 
         epsilon= 1 #testwaarde =>diepte put
-        sigma = 1 #Ook een testwaarde => lengte waarbij E=0 (denk ik)
+        sigma = 1 #Ook een testwaarde => lengte waarbij E=0 
 
-        afstand = LijstVanAtomen.afstandTussenTweeAtomen(atoomnummer=1) #1 dienst enkel om te testen
+        afstand = LijstVanAtomen.afstandTussenTweeAtomen(atoomnummer=1) #dienst enkel om te testen
 
         return 4*epsilon* (math.pow(sigma/afstand,12) - math.pow(sigma/afstand,6))
 
