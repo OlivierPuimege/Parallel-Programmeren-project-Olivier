@@ -9,8 +9,9 @@ A module
 """
 
 import numpy as np
-import math
-import scipy.constants as sc
+#import math
+#import scipy.constants as sc
+import f2py_lijstvanatomen.lijstvanatomen as fortran
 
 
 class LijstVanAtomen:
@@ -23,52 +24,12 @@ class LijstVanAtomen:
 
         print(self.lijstVanAtomen)
 
-    def afstandTussenTweeAtomen(self,atoom1,atoom2):
-	"""Deze functie blijft voorlopig staan maar zal in fortran uitgevoerd worden."""
+    def loopOverLijst(self):
+        """Deze functie roept de fortranfunctie op en loopt daarover"""
 
-        x1 = self.lijstVanAtomen[atoom1,0]
-        y1 = self.lijstVanAtomen[atoom1,1]
-        z1 = self.lijstVanAtomen[atoom1,2]
-
-        x2 = self.lijstVanAtomen[atoom2,0]
-        y2 = self.lijstVanAtomen[atoom2,1]
-        z2 = self.lijstVanAtomen[atoom2,2]
-        print(math.sqrt(math.pow((x1 - x2), 2) + math.pow((y1 - y2), 2) + math.pow((z1 - z2), 2)))
-
-        return math.sqrt(math.pow((x1 - x2), 2) + math.pow((y1 - y2), 2) + math.pow((z1 - z2), 2))
-
-    def pertuberen(self):
-	"""Deze functie zal naar fortran moeten verhuizen"""
-
-        KbT = 273*sc.Boltzmann #constante van boltzmann maal temperatuur
-
-        for atoom1 in range(len(self.lijstVanAtomen)):
-            for atoom2 in range(len(self.lijstVanAtomen)):
-                if atoom1 != atoom2:
-                    #Hier komt de LJpotentiaal, maar voorlopig testwaarden om te zien of dit kan werken
-                    #veranderingE = LJ.LJPotentiaal(self.getAtoom(atoom1),self.getAtoom(atoom2))
-                    veranderingE = 0.0#Dit is gewoon om te testen, dit wordt vervangen dor bovenstaande code als dit volledig werkt.
-
-                    #Ik heb hier print functies gezet zodanig dat ik de loops kan testen op correctheid. Deze code moet
-                    # later naar fortran of c++ want python loops zijn inneficiënt.
-                    print("ze zijn niet gelijk")
-
-                    #if np.random.rand() < math.pow(math.e, -veranderingE/KbT): #blijkbaar niet nodig, elke configuratie is ok
-                        #print("Energie check succesvol!")#Blijkbaar niet nodig
-
-                else: print("ze zijn gelijk")
+        fortran.f90.loopoverdelijst(self.lijstVanAtomen)
 
 
 
-    def getAtoom(self,atoomnummer):
-        return self.lijstVanAtomen[atoomnummer]
-
-
-
-#om wat te testen (afval code)
-aaa = LijstVanAtomen(5)
-print("test van getAtoom")
-print(aaa.getAtoom(1))
-aaa.pertuberen()
-print("De afstand is:")
-aaa.afstandTussenTweeAtomen(1,2)
+    def getLijstVanAtomen(self):
+        return self.lijstVanAtomen

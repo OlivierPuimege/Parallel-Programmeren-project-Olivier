@@ -5,7 +5,7 @@ Package parallel_programmeren_project_olivier
 
 A 'hello world' example.
 """
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 try:
     import parallel_programmeren_project_olivier.lva
