@@ -18,7 +18,7 @@ contains
 		write(*,*) 'lj',afstand
 	end function lj
 
-	function loopOverDeLijst(lijstVanAtomen,lengteLijst)
+	function loopOverDeLijst(lijstVanAtomen,lengteLijst) result(loopOverDeLijst)
 	!	!Deze functie loopt over de lijst van atomen en geeft een totale energie voor de configuratie
 		implicit None
 
@@ -38,7 +38,7 @@ contains
 			x1 = lijstVanAtomen(atoom1,1)
 			y1 = lijstVanAtomen(atoom1,2)
 			z1 = lijstVanAtomen(atoom1,3)
-			do atoom2=atoom1,lengteLijst
+			do atoom2=atoom1+1,lengteLijst
 				x2 = lijstVanAtomen(atoom2,1)
 				y2 = lijstVanAtomen(atoom2,2)
 				z2 = lijstVanAtomen(atoom2,3)
@@ -48,9 +48,7 @@ contains
 			end do
 		end do
 		loopOverDeLijst = etot
+		write(*,*) 'energie',etot
 	end function loopOverDeLijst
 
-! de bedoeling is dat je alle interactieenergien van atoomparen optelt en de totale energie teruggeeft.
-! Vermits dat één enkel getal is, kan je dat met een function doen ipv een subroutine. => deze dinges of de lj?
-! als je het met een subroutine doet moet je uiteraard een real(8), intent(out) gebruiken.
 end module f90

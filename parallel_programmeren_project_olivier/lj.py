@@ -31,5 +31,3 @@ class LJ:
 
         return 4*epsilon* (math.pow(sigma/afstand,12) - math.pow(sigma/afstand,6))
 
-for i in range(0,5):
-    print(i)
