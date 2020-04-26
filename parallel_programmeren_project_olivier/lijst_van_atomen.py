@@ -20,9 +20,7 @@ class LijstVanAtomen:
 
     def __init__(self, aantal): #aantal is het aantal atomen.
 
-        self.lijstVanAtomen = np.random.rand(aantal,3)
-
-        print(self.lijstVanAtomen)
+        self.lijstVanAtomen = np.random.rand(3,aantal) #Deze maakt 3 lijsten: de x-co, de y-co en de z-co
 
     def loopOverLijst(self,aantalStappen,aantalAtomen):
         """Deze functie roept de fortranfunctie op en loopt daarover"""
@@ -32,26 +30,24 @@ class LijstVanAtomen:
 
         print("Eerste configuratie")
         optimaleconfiguratie = LijstVanAtomen(m) #Hier wordt er een eerste configuratie gemaakt
-        lengte = len(self.lijstVanAtomen)
-        energie1 = fortran.f90.loopoverdelijst(optimaleconfiguratie.getLijstVanAtomen(),lengte)
-
+        energie1 = fortran.f90.loopoverdelijst(optimaleconfiguratie.getLijstVanAtomen(),m)
+        energieLijst = np.array(energie1) #Bij veel stappen wordt de lijst groot, dus neem ik een numpy list voor later het gemiddelde efficiënt te berekenen.
 
         for iterator in range(n): #We itereren over het aantal stappen
             print("poging tot nieuwe configuratie")
             nieuweLijst = LijstVanAtomen(m) #een poging tot een nieuwe configuratie wordt gemaakt
 
+            energie2 = fortran.f90.loopoverdelijst(nieuweLijst.getLijstVanAtomen(),m) #de energie van de nieuwe configuratie wordt bepaald
+            energieLijst =np.append(energieLijst, energie2) #De nieuwe energie wordt aan de lijst toegevoegd.
 
-            energie2 = fortran.f90.loopoverdelijst(nieuweLijst.getLijstVanAtomen(),lengte)
-
-            if energie1>energie2:
-                optimaleconfiguratie = nieuweLijst
+            if energie1>energie2: #A
+                optimaleconfiguratie = nieuweLijst #Als de nieuwe configuratie een lagere energie heeft, wordt dat het referentiepunt.
                 print("De nieuwe energie is:")
                 print(energie2)
-                energie1 = energie2
+                energie1 = energie2 #Natuurlijk moet energie1 dan aangepast worden
 
         return optimaleconfiguratie.getLijstVanAtomen()
 
 
-    def getLijstVanAtomen(self):
-        return self.lijstVanAtomen
-
+    def getLijstVanAtomen(self): #Deze functie geeft de lijst van atomen terug.
+        return self.lijstVanAtomen #Dit geeft dus een lijst terug van 3 deellijsten, elk het aantal atomen groot.
