@@ -9,7 +9,7 @@ A module
 """
 
 import math
-
+import numpy as np
 
 class LJ:
 
@@ -30,4 +30,5 @@ class LJ:
         afstand = LijstVanAtomen.afstandTussenTweeAtomen(atoomnummer=1) #dienst enkel om te testen
 
         return 4*epsilon* (math.pow(sigma/afstand,12) - math.pow(sigma/afstand,6))
+
 

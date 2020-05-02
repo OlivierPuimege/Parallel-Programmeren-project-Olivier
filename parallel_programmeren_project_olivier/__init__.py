@@ -5,7 +5,20 @@ Package parallel_programmeren_project_olivier
 
 A 'hello world' example.
 """
-__version__ = "1.0.1"
+__version__ = "1.0.2"
+
+try:
+    import parallel_programmeren_project_olivier.rngfortran
+except ModuleNotFoundError as e:
+    # Try to build this binary extension:
+    from pathlib import Path
+    import click
+    from et_micc_build.cli_micc_build import auto_build_binary_extension
+    msg = auto_build_binary_extension(Path(__file__).parent, 'rngfortran')
+    if not msg:
+        import parallel_programmeren_project_olivier.rngfortran
+    else:
+        click.secho(msg, fg='bright_red')
 
 try:
     import parallel_programmeren_project_olivier.lva

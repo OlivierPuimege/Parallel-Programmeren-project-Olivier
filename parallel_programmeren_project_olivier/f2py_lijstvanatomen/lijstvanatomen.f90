@@ -10,7 +10,6 @@ contains
 
 		!variabelen
 		real*8					:: afstand
-	!	real*8	  			:: epsilo,sigma		!epsilon is een functie in fortran, daarom epsilo
 		real*8					:: lj		!Output, de interactie energie tussen de twee atomen
 
 		!function body
@@ -19,7 +18,7 @@ contains
 	end function lj
 
 	function loopOverDeLijst(lijstVanAtomen,lengteLijst)
-	!	!Deze functie loopt over de lijst van atomen en geeft een totale energie voor de configuratie
+		!Deze functie loopt over de lijst van atomen en geeft een totale energie voor de configuratie
 		implicit None
 
 		!variabelen
@@ -32,7 +31,7 @@ contains
 		real*8 :: x2,y2,z2
 		real*8 :: etot
 		real*8 :: afstand
-	!	!function body
+		!function body
 		etot = 0
 		do atoom1=1,lengteLijst
 			x1 = lijstVanAtomen(1,atoom1)
@@ -50,6 +49,7 @@ contains
 		loopOverDeLijst = etot
 		write(*,*) 'energie',etot
 	end function loopOverDeLijst
+
 
 
 end module f90

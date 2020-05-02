@@ -12,6 +12,9 @@ import numpy as np
 #import math
 #import scipy.constants as sc
 import f2py_lijstvanatomen.lijstvanatomen as fortran
+import f2py_rngfortran.rngfortran as rng
+from et_stopwatch import Stopwatch
+
 
 
 class LijstVanAtomen:
@@ -46,8 +49,59 @@ class LijstVanAtomen:
                 print(energie2)
                 energie1 = energie2 #Natuurlijk moet energie1 dan aangepast worden
 
+        print("Het gemiddelde is:")
+        gemiddelde = np.mean(energieLijst)
+        print(gemiddelde)
+
+        print("De standaardafwijking is:")
+        standaardafwijking = np.std(energieLijst)
+        print(standaardafwijking)
+
         return optimaleconfiguratie.getLijstVanAtomen()
+
+    def tijdtestenRNG (self, aantalAtomen=10000, aantalConfiguraties=10000):
+        stopwatchNumpy = Stopwatch()
+        stopwatchNumpy.start()
+        for iterator in range(aantalConfiguraties):
+            numpyConfiguratie = LijstVanAtomen(aantalAtomen)
+        numpyTijd = stopwatchNumpy.stop()
+
+        print("De tijd die numpy nodig heeft is (in seconden):")
+        print(numpyTijd)
+
+        stopwatchRNG = Stopwatch()
+        stopwatchRNG.start()
+        x = abs(rng.rngmodule.rng(5))
+        y = abs(rng.rngmodule.rng(x))
+        z = abs(rng.rngmodule.rng(y))
+
+        xlijst = np.array(x)
+        ylijst = np.array(y)
+        zlijst = np.array(z)
+        for iterator in range(aantalConfiguraties -1):
+            x = abs(rng.rngmodule.rng(z))
+            xlijst = np.append(xlijst,x)
+
+            y = abs(rng.rngmodule.rng(x))
+            ylijst = np.append(ylijst, y)
+
+            z = abs(rng.rngmodule.rng(y))
+            zlijst = np.append(zlijst, z)
+        rngLijst = np.vstack((xlijst,ylijst,zlijst))
+
+        RNGtijd = stopwatchRNG.stop()
+
+        print("De tijd die mijn RNG nodig heeft is (in seconden):")
+        print(RNGtijd)
 
 
     def getLijstVanAtomen(self): #Deze functie geeft de lijst van atomen terug.
         return self.lijstVanAtomen #Dit geeft dus een lijst terug van 3 deellijsten, elk het aantal atomen groot.
+
+
+zzz = LijstVanAtomen(5)
+
+print("test van de loop")
+#zzz.loopOverLijst(10,5)
+print("einde loop test")
+zzz.tijdtestenRNG()
