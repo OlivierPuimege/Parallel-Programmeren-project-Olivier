@@ -31,4 +31,4 @@ class LJ:
 
         return 4*epsilon* (math.pow(sigma/afstand,12) - math.pow(sigma/afstand,6))
 
-
+0.91112557018487139        1.7479563768054671

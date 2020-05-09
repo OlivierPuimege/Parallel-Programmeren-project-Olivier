@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "Parallel-Programmeren-project-Olivier"
-version = "1.0.2"
+version = "2.0.0"
 description = "<Enter a one-sentence description of this project here.>"
 authors = ["Olivier Puimege <olivier.puimege@student.uantwerpen.be>"]
 license = "MIT"
@@ -16,6 +16,7 @@ keywords = ['packaging', 'poetry']
 python = "^3.7"
 et-micc-build = ">=0.10.18,<1.0.0"
 et_stopwatch = "^1.0.5"
+mpi4py = "^3.0.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.4.2"

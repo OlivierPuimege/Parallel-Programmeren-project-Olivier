@@ -24,3 +24,7 @@ API
 .. include:: ../parallel_programmeren_project_olivier/f2py_lva/lva.rst
 
 .. include:: ../parallel_programmeren_project_olivier/f2py_rngfortran/rngfortran.rst
+
+.. automodule:: parallel_programmeren_project_olivier.parallelv1
+   :members:
+

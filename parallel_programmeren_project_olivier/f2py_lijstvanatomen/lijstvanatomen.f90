@@ -9,12 +9,18 @@ contains
 		!en dan zou de configuratie toch weggegooit moeten worden.
 
 		!variabelen
-		real*8					:: afstand
-		real*8					:: lj		!Output, de interactie energie tussen de twee atomen
+		real*8			:: afstand
+		real*8			:: lj		!Output, de interactie energie tussen de twee atomen
+		real*8			:: temp !Deze dient voor de tussenberekeningen.
+			
 
 		!function body
-		lj = 4.*((1./afstand)**12-(1./afstand)**6)
-		write(*,*) 'lj',afstand
+		!lj = 4.*((1./afstand)**12-(1./afstand)**6)
+		temp = 1./afstand
+		temp = temp*temp
+		temp = temp*temp*temp
+		lj = 4*temp*(temp-1.0)
+		
 	end function lj
 
 	function loopOverDeLijst(lijstVanAtomen,lengteLijst)

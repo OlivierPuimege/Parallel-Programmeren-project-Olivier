@@ -243,6 +243,14 @@ version = "8.2.0"
 
 [[package]]
 category = "main"
+description = "Python bindings for MPI"
+name = "mpi4py"
+optional = false
+python-versions = "*"
+version = "3.0.3"
+
+[[package]]
+category = "main"
 description = "NumPy is the fundamental package for array computing with Python."
 name = "numpy"
 optional = false
@@ -603,7 +611,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "5e7f9c0ee09a8a18c9cd21a07ddbfe5ce93604a84b278d000a10940318a5c34d"
+content-hash = "7db86f94613175ebcac999abf94f4a7830101c3dbb666327847f3b1d78592c16"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -728,6 +736,21 @@ markupsafe = [
 more-itertools = [
     {file = "more-itertools-8.2.0.tar.gz", hash = "sha256:b1ddb932186d8a6ac451e1d95844b382f55e12686d51ca0c68b6f61f2ab7a507"},
     {file = "more_itertools-8.2.0-py3-none-any.whl", hash = "sha256:5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c"},
+]
+mpi4py = [
+    {file = "mpi4py-3.0.3-cp27-cp27m-win32.whl", hash = "sha256:6445dd41054a90fa97c649d3dc9d70511d129831cc1806bbe9628eab4e72fe30"},
+    {file = "mpi4py-3.0.3-cp27-cp27m-win_amd64.whl", hash = "sha256:f74887a4da0e1b8ea1b393be008da2e1810d08cde899195c927cc8ce40178e86"},
+    {file = "mpi4py-3.0.3-cp33-cp33m-win32.whl", hash = "sha256:1799de61b8b755cd20ab7aca078892ca4f0dc7c96c63c231082dfe7d81644a8c"},
+    {file = "mpi4py-3.0.3-cp33-cp33m-win_amd64.whl", hash = "sha256:31be264534e3b0afb4d1ac8d357424f0742a93a6b604d5ad8c96f6472f62f827"},
+    {file = "mpi4py-3.0.3-cp34-cp34m-win32.whl", hash = "sha256:bf977b5e7f7354b100f74c604035fda467539aa252bdbadec89191c794f40560"},
+    {file = "mpi4py-3.0.3-cp34-cp34m-win_amd64.whl", hash = "sha256:5a533c8c08bbc542fe3e4f0e4ea95e15ee19157a739d84b64ea096a91424e824"},
+    {file = "mpi4py-3.0.3-cp35-cp35m-win32.whl", hash = "sha256:b7ffc1a7b7e4afe9f117aecd0d0cf923add96c821fb652ff99a3368ecea9ddb6"},
+    {file = "mpi4py-3.0.3-cp35-cp35m-win_amd64.whl", hash = "sha256:db8531579b777e2bafb1b004224206685614069d276ff1d9a9f4c6c9b44485d9"},
+    {file = "mpi4py-3.0.3-cp36-cp36m-win32.whl", hash = "sha256:c7f11495188ffbf6550faa1f029d139f155d88fe25efde4def8dff22d4d66376"},
+    {file = "mpi4py-3.0.3-cp36-cp36m-win_amd64.whl", hash = "sha256:d0f2caea8906de62239f34f275306693093d600b23070709713d97a1849edb66"},
+    {file = "mpi4py-3.0.3-cp37-cp37m-win32.whl", hash = "sha256:f46f06eb2230e958bfc24d6509f1679b4843f9f35ef79c89aecede91f3b21842"},
+    {file = "mpi4py-3.0.3-cp37-cp37m-win_amd64.whl", hash = "sha256:3c6b2bfc3eae756142158439d6108d53e208976e3882377afe921e6c60df3034"},
+    {file = "mpi4py-3.0.3.tar.gz", hash = "sha256:012d716c8b9ed1e513fcc4b18e5af16a8791f51e6d1716baccf988ad355c5a1f"},
 ]
 numpy = [
     {file = "numpy-1.18.2-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:a1baa1dc8ecd88fb2d2a651671a84b9938461e8a8eed13e2f0a812a94084d1fa"},
