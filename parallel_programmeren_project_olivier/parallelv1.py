@@ -30,57 +30,75 @@ class LijstVanAtomen:
         rank = comm.Get_rank()  #huidige core
         size = comm.Get_size() #aantal cores
 
-        n=aantalStappen-1     #Het aantal stappen die de simulatie neemt, er wordt 1 stap minder gedaan omdat deze al gebeurt voor de lijst te initiëren.
+        n=aantalStappen     #Het aantal stappen die de simulatie neemt, er wordt 1 stap minder gedaan omdat deze al gebeurt voor de lijst te initiëren.
         m=aantalAtomen     #Het aantal atomen per lijst.
 
-        perrank = n//size #hoeveel stappen per core
-
-
-        print("Eerste configuratie") #Hierna wordt respectievelijke de stopwatch aangemaakt en gestart
-        comm.Barrier() #deze statement zorgt ervoor dat de core's hier zeker samen starten.
+        perrank = n//size #hoeveel stappen per core, maar moet een geheel getal zijn dus //
 
         stopwatch = Stopwatch()
         stopwatch.start()
-        optimaleconfiguratie = LijstVanAtomen(m) #Hier wordt er een eerste configuratie gemaakt
-        energie1 = fortran.f90.loopoverdelijst(optimaleconfiguratie.getLijstVanAtomen(),m)
 
-        energieSom = energie1
-        kwadratischeEnergieSom = np.square(energie1)
-
+        energie2 = 2147483647 #maximum waarde, omdat later energie1 de eerste keer kleiner moet zijn.
+        energieSom = 0
+        kwadratischeEnergieSom = 0
 
         for iterator in range(1 + rank * perrank, 1 + (rank + 1) * perrank): #We itereren over het aantal stappen
             print("poging tot nieuwe configuratie")
-            nieuweLijst = LijstVanAtomen(m) #een poging tot een nieuwe configuratie wordt gemaakt
+            nieuweLijst = LijstVanAtomen(m) #een nieuwe configuratie wordt gemaakt
+            lijstje = nieuweLijst.getLijstVanAtomen()
+            anderelijst = nieuweLijst.lijstVanAtomen
+            energie1 = fortran.f90.loopoverdelijst(nieuweLijst.getLijstVanAtomen(),m) #de energie van de nieuwe configuratie wordt bepaald
 
-            energie2 = fortran.f90.loopoverdelijst(nieuweLijst.getLijstVanAtomen(),m) #de energie van de nieuwe configuratie wordt bepaald
+            energieSom += energie1
+            kwadratischeEnergieSom += np.square(energie1)
 
-            energieSom += energie2
-            kwadratischeEnergieSom += np.square(energie2)
+            if energie1<energie2: #de eerste keer wordt deze if sowieso aanvaard omdat energie2 max is, dus optimale configuratie wordt aangemaakt.
 
-            if energie1>energie2:
-                optimaleconfiguratie = nieuweLijst #Als de nieuwe configuratie een lagere energie heeft, wordt dat het referentiepunt.
                 print("De nieuwe energie is:")
-                print(energie2)
-                energie1 = energie2 #Natuurlijk moet energie1 dan aangepast worden
+                print(energie1)
+                energie2 = energie1 #Natuurlijk moet energie2 (=laagste energie) dan aangepast worden
+                optimaleconfiguratie = nieuweLijst.lijstVanAtomen #Als de nieuwe configuratie een lagere energie heeft, wordt dat het referentiepunt.
 
+        comm.send(optimaleconfiguratie, dest=0, tag=1)
+        comm.send(energie2, dest=0, tag=2)
 
+        comm.Barrier()  # deze statement zorgt ervoor dat de core's hier zeker samen starten.
 
         stopwatch.stop()
-        print("Het aanmaken van de lijsten en loopen hierover duurt zoveel seconden:")
-        print(stopwatch)
 
-        print("De som is:")
-        print(energieSom)
+        if rank == 0:
+            optimaleconfiguratie = [optimaleconfiguratie]
+            energie2 = [str(energie2)]
 
-        print("Het gemiddelde is:")
-        gemiddelde = energieSom/n #n is het aantal configuraties
-        print(gemiddelde)
+            for iterator in range(size-1):
+                optimaleconfiguratie.append(comm.recv(source=iterator+1, tag=1))
+                energie2.append(str(comm.recv(source=iterator+1, tag=2)))
 
-        print("De standaardafwijking is:")
-        standaardafwijking = np.sqrt(kwadratischeEnergieSom/n-np.square(energieSom/n))
-        print(standaardafwijking)
+            dictionary = {energie2[i]: optimaleconfiguratie[i] for i in range(len(energie2))}
 
-        return optimaleconfiguratie.getLijstVanAtomen()
+            minimum = str(min(dictionary))
+            optimaleconfiguratie = dictionary[minimum]
+
+
+        energieSom = comm.gather(energieSom, root=0)
+        kwadratischeEnergieSom = comm.gather(kwadratischeEnergieSom, root=0)
+
+        if rank ==0:
+            print("Het aanmaken van de lijsten en loopen hierover duurt zoveel seconden:")
+            print(stopwatch)
+
+            print("De som is:")
+            print(sum(energieSom))
+
+            print("Het gemiddelde is:")
+            gemiddelde = sum(energieSom)/n #n is het aantal configuraties
+            print(gemiddelde)
+
+            print("De standaardafwijking is:")
+            standaardafwijking = np.sqrt(sum(kwadratischeEnergieSom)/n-np.square(sum(energieSom)/n))
+            print(standaardafwijking)
+
+            return optimaleconfiguratie #probleem, returnt enkel de laagste van 0, maar wat als andere lager is?
 
     def tijdtestenRNG (self, aantalConfiguraties=100, aantalAtomen=100):
         stopwatchNumpy = Stopwatch()
@@ -137,8 +155,8 @@ class LijstVanAtomen:
 
 zzz = LijstVanAtomen(5)
 
-print("test van de loop")
+#print("test van de loop")
 zzz.loopOverLijst(10,10)
-print("einde loop test")
+#print("einde loop test")
 #print("tijd testen")
 #zzz.tijdtestenRNG()
