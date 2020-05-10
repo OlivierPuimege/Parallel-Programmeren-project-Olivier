@@ -31,7 +31,6 @@ contains
 		integer*4, intent(in) 		  :: lengteLijst	 !De lengte van de lijstVanAtomen.
 		real*8, dimension(3,lengteLijst),intent(in) :: lijstVanAtomen	 !De numpy lijst van atoomcoordinaten.
 		real*8				  :: loopOverDeLijst 		 !De output van de functie
-
 		integer*4			  :: atoom1,atoom2	 !Locale variabelen, geven het atoomnummer weer, uit de lijst.
 		real*8 :: x1,y1,z1
 		real*8 :: x2,y2,z2
@@ -53,7 +52,7 @@ contains
 			end do
 		end do
 		loopOverDeLijst = etot
-		write(*,*) 'energie',etot
+		!write(*,*) 'energie',etot
 	end function loopOverDeLijst
 
 

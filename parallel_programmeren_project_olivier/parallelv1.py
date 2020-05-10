@@ -21,9 +21,11 @@ class LijstVanAtomen:
 
     def __init__(self, aantal): #aantal is het aantal atomen.
 
-        self.lijstVanAtomen = np.random.rand(3,aantal) #Deze maakt 3 lijsten: de x-co, de y-co en de z-co
+        lijstVanAtomen = np.random.rand(3,aantal) #Deze maakt 3 lijsten: de x-co, de y-co en de z-co
 
-    def loopOverLijst(self,aantalStappen=10000,aantalAtomen=100):
+        self.lijstVanAtomen = lijstVanAtomen.reshape(3,aantal)
+
+    def loopOverLijst(self,aantalStappen=1000,aantalAtomen=10):
         """Deze functie roept de fortranfunctie op en loopt daarover"""
 
         comm = MPI.COMM_WORLD
@@ -38,31 +40,30 @@ class LijstVanAtomen:
         stopwatch = Stopwatch()
         stopwatch.start()
 
-        energie2 = 2147483647 #maximum waarde, omdat later energie1 de eerste keer kleiner moet zijn.
+        energie2 = float("inf")#maximum waarde, omdat later energie1 de eerste keer kleiner moet zijn.
         energieSom = 0
         kwadratischeEnergieSom = 0
 
         for iterator in range(1 + rank * perrank, 1 + (rank + 1) * perrank): #We itereren over het aantal stappen
-            print("poging tot nieuwe configuratie")
+            #print("poging tot nieuwe configuratie")
             nieuweLijst = LijstVanAtomen(m) #een nieuwe configuratie wordt gemaakt
-            lijstje = nieuweLijst.getLijstVanAtomen()
-            anderelijst = nieuweLijst.lijstVanAtomen
-            energie1 = fortran.f90.loopoverdelijst(nieuweLijst.getLijstVanAtomen(),m) #de energie van de nieuwe configuratie wordt bepaald
+
+            energie1 = fortran.f90.loopoverdelijst(nieuweLijst.lijstVanAtomen,m) #de energie van de nieuwe configuratie wordt bepaald
 
             energieSom += energie1
             kwadratischeEnergieSom += np.square(energie1)
 
             if energie1<energie2: #de eerste keer wordt deze if sowieso aanvaard omdat energie2 max is, dus optimale configuratie wordt aangemaakt.
 
-                print("De nieuwe energie is:")
-                print(energie1)
+                #print("De nieuwe energie is:")
+                #print(energie1)
                 energie2 = energie1 #Natuurlijk moet energie2 (=laagste energie) dan aangepast worden
                 optimaleconfiguratie = nieuweLijst.lijstVanAtomen #Als de nieuwe configuratie een lagere energie heeft, wordt dat het referentiepunt.
 
         comm.send(optimaleconfiguratie, dest=0, tag=1)
         comm.send(energie2, dest=0, tag=2)
 
-        comm.Barrier()  # deze statement zorgt ervoor dat de core's hier zeker samen starten.
+        comm.Barrier()  # deze statement zorgt ervoor dat de core's hier zeker samen stoppen.
 
         stopwatch.stop()
 
@@ -100,7 +101,10 @@ class LijstVanAtomen:
 
             return optimaleconfiguratie #probleem, returnt enkel de laagste van 0, maar wat als andere lager is?
 
-    def tijdtestenRNG (self, aantalConfiguraties=100, aantalAtomen=100):
+        return 0
+
+
+    def tijdtestenRNG (self, aantalConfiguraties=1000, aantalAtomen=2):
         stopwatchNumpy = Stopwatch()
         stopwatchNumpy.start()
         for iterator in range(aantalConfiguraties):
@@ -156,7 +160,8 @@ class LijstVanAtomen:
 zzz = LijstVanAtomen(5)
 
 #print("test van de loop")
-zzz.loopOverLijst(10,10)
+zzz.loopOverLijst(10,100)
 #print("einde loop test")
 #print("tijd testen")
 #zzz.tijdtestenRNG()
+print("einde")
