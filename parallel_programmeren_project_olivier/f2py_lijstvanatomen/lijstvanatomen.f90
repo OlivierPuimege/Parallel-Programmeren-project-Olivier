@@ -29,8 +29,9 @@ contains
 
 		!variabelen
 		integer*4, intent(in) 		  :: lengteLijst	 !De lengte van de lijstVanAtomen.
-		real*8, dimension(3,lengteLijst),intent(in) :: lijstVanAtomen	 !De numpy lijst van atoomcoordinaten.
+		real*8, dimension(3*lengteLijst),intent(in) :: lijstVanAtomen	 !De numpy lijst van atoomcoordinaten.
 		real*8				  :: loopOverDeLijst 		 !De output van de functie
+
 		integer*4			  :: atoom1,atoom2	 !Locale variabelen, geven het atoomnummer weer, uit de lijst.
 		real*8 :: x1,y1,z1
 		real*8 :: x2,y2,z2
@@ -39,20 +40,20 @@ contains
 		!function body
 		etot = 0
 		do atoom1=1,lengteLijst
-			x1 = lijstVanAtomen(1,atoom1)
-			y1 = lijstVanAtomen(2,atoom1)
-			z1 = lijstVanAtomen(3,atoom1)
+			x1 = lijstVanAtomen(atoom1)
+			y1 = lijstVanAtomen(atoom1+lengteLijst)
+			z1 = lijstVanAtomen(atoom1+lengteLijst*2)
 			do atoom2=atoom1+1,lengteLijst
-				x2 = lijstVanAtomen(1,atoom2)
-				y2 = lijstVanAtomen(2,atoom2)
-				z2 = lijstVanAtomen(3,atoom2)
+				x2 = lijstVanAtomen(atoom2)
+				y2 = lijstVanAtomen(atoom2+lengteLijst)
+				z2 = lijstVanAtomen(atoom2+lengteLijst*2)
 
 				afstand = sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
 				etot = etot + lj(afstand)
 			end do
 		end do
 		loopOverDeLijst = etot
-		!write(*,*) 'energie',etot
+		write(*,*) 'energie',etot
 	end function loopOverDeLijst
 
 

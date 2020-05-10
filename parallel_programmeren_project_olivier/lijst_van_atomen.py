@@ -21,7 +21,7 @@ class LijstVanAtomen:
 
     def __init__(self, aantal): #aantal is het aantal atomen.
 
-        self.lijstVanAtomen = np.random.rand(3,aantal) #Deze maakt 3 lijsten: de x-co, de y-co en de z-co
+        self.lijstVanAtomen = np.random.rand(3*aantal) #Deze maakt 3 lijsten: de x-co, de y-co en de z-co
 
     def loopOverLijst(self,aantalStappen=10000,aantalAtomen=100):
         """Deze functie roept de fortranfunctie op en loopt daarover"""
@@ -133,7 +133,7 @@ class LijstVanAtomen:
 zzz = LijstVanAtomen(5)
 
 print("test van de loop")
-zzz.loopOverLijst(10,10)
+zzz.loopOverLijst(10,1000)
 print("einde loop test")
 #print("tijd testen")
 #zzz.tijdtestenRNG()

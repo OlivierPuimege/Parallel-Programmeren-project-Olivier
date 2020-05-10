@@ -9,24 +9,33 @@ Dit is de geparalleliseerde versie van lijst van atomen
 """
 
 import numpy as np
-#import scipy.constants as sc
 import f2py_lijstvanatomen.lijstvanatomen as fortran
 import f2py_rngfortran.rngfortran as rng
 from et_stopwatch import Stopwatch
 from mpi4py import MPI
 
 class LijstVanAtomen:
-    """Dit is de klasse LijstVanAtomen, omdat we enkel Lennard-Jones potentialen gaan gebruiken moet deze enkel positites hebben."""
+    """
+    Dit is de klasse LijstVanAtomen, omdat we enkel Lennard-Jones potentialen gaan gebruiken moet deze enkel positites hebben.
+    """
 
+    def __init__(self, aantal):
+        """
+        Deze maakt een klasseobject aan van lijst van atomen.
+        De coördinaten staan allemaal in 1 lijst. Dus de fortranfunctie moet voor y-coördinaten het aantal atoomnummer
+        plus het aantal atomen moeten doen, en voor z + 2 keer het aantal atomen
+        :param aantal:
+        """
 
-    def __init__(self, aantal): #aantal is het aantal atomen.
-
-        lijstVanAtomen = np.random.rand(3,aantal) #Deze maakt 3 lijsten: de x-co, de y-co en de z-co
-
-        self.lijstVanAtomen = lijstVanAtomen.reshape(3,aantal)
+        self.lijstVanAtomen = np.random.rand(3*aantal) #Deze maakt 1 lijst: eerst alle x-co, dan alle y-co,...
 
     def loopOverLijst(self,aantalStappen=1000,aantalAtomen=10):
-        """Deze functie roept de fortranfunctie op en loopt daarover"""
+        """
+        Deze functie roept de fortranfunctie op en loopt daarover
+        :param aantalStappen: Hoeveel configuraties er getest worden.
+        :param aantalAtomen:  Hoeveel atomen er per configuratie moeten zijn
+        :return: De optimale configuratie wordt teruggegeven
+        """
 
         comm = MPI.COMM_WORLD
         rank = comm.Get_rank()  #huidige core
@@ -60,31 +69,23 @@ class LijstVanAtomen:
                 energie2 = energie1 #Natuurlijk moet energie2 (=laagste energie) dan aangepast worden
                 optimaleconfiguratie = nieuweLijst.lijstVanAtomen #Als de nieuwe configuratie een lagere energie heeft, wordt dat het referentiepunt.
 
-        comm.send(optimaleconfiguratie, dest=0, tag=1)
-        comm.send(energie2, dest=0, tag=2)
-
         comm.Barrier()  # deze statement zorgt ervoor dat de core's hier zeker samen stoppen.
-
         stopwatch.stop()
 
-        if rank == 0:
-            optimaleconfiguratie = [optimaleconfiguratie]
-            energie2 = [str(energie2)]
+        #Deze blok dient om de optimale configuratie te vinden
+        optimaleconfiguratie = comm.gather(optimaleconfiguratie, root=0)
+        energie2 = comm.gather(str(energie2),root =0)
 
-            for iterator in range(size-1):
-                optimaleconfiguratie.append(comm.recv(source=iterator+1, tag=1))
-                energie2.append(str(comm.recv(source=iterator+1, tag=2)))
-
+        if rank ==0:
             dictionary = {energie2[i]: optimaleconfiguratie[i] for i in range(len(energie2))}
 
             minimum = str(min(dictionary))
             optimaleconfiguratie = dictionary[minimum]
 
-
         energieSom = comm.gather(energieSom, root=0)
         kwadratischeEnergieSom = comm.gather(kwadratischeEnergieSom, root=0)
+        if rank == 0:
 
-        if rank ==0:
             print("Het aanmaken van de lijsten en loopen hierover duurt zoveel seconden:")
             print(stopwatch)
 
@@ -96,15 +97,18 @@ class LijstVanAtomen:
             print(gemiddelde)
 
             print("De standaardafwijking is:")
-            standaardafwijking = np.sqrt(sum(kwadratischeEnergieSom)/n-np.square(sum(energieSom)/n))
+            standaardafwijking = np.sqrt(sum(kwadratischeEnergieSom)/n-np.square(gemiddelde))
             print(standaardafwijking)
 
             return optimaleconfiguratie #probleem, returnt enkel de laagste van 0, maar wat als andere lager is?
 
-        return 0
-
-
-    def tijdtestenRNG (self, aantalConfiguraties=1000, aantalAtomen=2):
+    def tijdtestenRNG (self, aantalConfiguraties=1000, aantalAtomen=10):
+        """
+        Deze functie is niet meer up to date
+        :param aantalConfiguraties: hoeveel configuraties er doorlopen moeten worden
+        :param aantalAtomen: het aantal atomen per configuratie
+        :return: niets want de waardes worden geprint
+        """
         stopwatchNumpy = Stopwatch()
         stopwatchNumpy.start()
         for iterator in range(aantalConfiguraties):
@@ -146,10 +150,19 @@ class LijstVanAtomen:
 
 
 
-    def getLijstVanAtomen(self): #Deze functie geeft de lijst van atomen terug.
+    def getLijstVanAtomen(self):
+        """
+        Deze functie is buiten gebruik geraakt.
+        :return:
+        """
         return self.lijstVanAtomen #Dit geeft dus een lijst terug van 3 deellijsten, elk het aantal atomen groot.
 
-    def checkIfDuplicates_1(self,listOfElems): #functie gepikt van internet, deze checkt of een lijst alleen unieke elementen heeft
+    def checkIfDuplicates_1(self,listOfElems):
+        """
+        functie gepikt van internet, deze checkt of een lijst alleen unieke elementen heeft => eigen RNg testen
+        :param listOfElems:
+        :return:
+        """
         ''' Check if given list contains any duplicates '''
         if len(listOfElems) == len(set(listOfElems)):
             print("tis in orde")
@@ -165,3 +178,4 @@ zzz.loopOverLijst(10,100)
 #print("tijd testen")
 #zzz.tijdtestenRNG()
 print("einde")
+
