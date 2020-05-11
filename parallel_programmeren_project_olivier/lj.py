@@ -31,4 +31,3 @@ class LJ:
 
         return 4*epsilon* (math.pow(sigma/afstand,12) - math.pow(sigma/afstand,6))
 
-print(sum([1,2,3]))

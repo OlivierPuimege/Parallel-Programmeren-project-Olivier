@@ -53,7 +53,7 @@ contains
 			end do
 		end do
 		loopOverDeLijst = etot
-		write(*,*) 'energie',etot
+		!write(*,*) 'energie',etot
 	end function loopOverDeLijst
 
 
