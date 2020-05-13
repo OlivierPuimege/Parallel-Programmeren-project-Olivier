@@ -5,7 +5,7 @@ Package parallel_programmeren_project_olivier
 
 A 'hello world' example.
 """
-__version__ = "2.0.3"
+__version__ = "2.1.0"
 
 try:
     import parallel_programmeren_project_olivier.rngfortran
