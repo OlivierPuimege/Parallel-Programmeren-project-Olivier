@@ -13,7 +13,6 @@ contains
 	    integer*8, parameter   :: m=2_8**31-1 
 	    
 	    integer*8	:: atomen,stappen,z
- 	    integer*8, dimension(3*aantalatomen) ::x
       
             !kleine variant van de Middle Square Weyl Sequence PRNG
 	    z = seed		
