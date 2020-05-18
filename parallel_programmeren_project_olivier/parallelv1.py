@@ -37,6 +37,8 @@ class LijstVanAtomen:
         :return: De optimale configuratie wordt teruggegeven
         """
 
+        algemeneStopwatch = Stopwatch()
+        algemeneStopwatch.start()
         comm = MPI.COMM_WORLD #om iets minder te moeten typen in de rest van de code.
         rank = comm.Get_rank()  #huidige core
         size = comm.Get_size() #aantal cores
@@ -68,15 +70,18 @@ class LijstVanAtomen:
                 optimaleconfiguratie = nieuweLijst.lijstVanAtomen #Als de nieuwe configuratie een lagere energie heeft, wordt dat het referentiepunt.
 
         comm.Barrier()  # deze statement zorgt ervoor dat de core's hier zeker samen stoppen.
-        stopwatch.stop() #Door hiervoor samen te stoppen krijg ik enkel de traagste tijd, dus degene die de gebruiker effectief moet wachten
+         #Door hiervoor samen te stoppen krijg ik enkel de traagste tijd, dus degene die de gebruiker effectief moet wachten
 
         #De volgende blokken zijn niet bepaald snel maar hoeven maar 1 keer uitgevoerd te worden, dus performantie-updates zijn hier verspilde moeite.
 
         #Deze blok dient om de optimale configuratie te vinden, tussen alle cores.
         optimaleconfiguratie = comm.gather(optimaleconfiguratie, root=0)
         energie2 = comm.gather(str(energie2),root =0)#opslaan als string opmdat dict niet kan zoeken op float
+        stopwatch.stop()
 
         if rank ==0: #zoek de laagste energie, en geef de bijbehorende configuratie => daarom een dict.
+            stopwatch1 = Stopwatch()
+            stopwatch1.start()
             dictionary = {energie2[i]: optimaleconfiguratie[i] for i in range(len(energie2))}
 
             minimum = str(min(dictionary)) #normaal kan python dit aan, maar min geeft wel een getal terug, dus vandaar opnieuw een string.
@@ -99,8 +104,12 @@ class LijstVanAtomen:
             print("De standaardafwijking is:")
             standaardafwijking = np.sqrt(sum(kwadratischeEnergieSom)/n-np.square(gemiddelde))
             print(standaardafwijking)
-
+            algemeneStopwatch.stop()
+            stopwatch1.stop()
+            print("de algemene stopwatch is:",algemeneStopwatch)
+            print("stopwatch van processin in core 1",stopwatch1)
             return optimaleconfiguratie
+        algemeneStopwatch.stop()
 
     def tijdtestenkwadraat(self, aantalIteraties=10000, getal=np.random.rand(1)):
         """
@@ -131,9 +140,9 @@ class LijstVanAtomen:
         print("Stopwatch Numpy:",StopwatchNumpy)
         print("Stopwatch Manueel kwadraat:", StopwatchManueelKwadraat)
 
-    def tijdtestenRNG (self, aantalConfiguraties=1000, aantalAtomen=10):
+    def tijdtestenRNG (self, aantalConfiguraties=10000, aantalAtomen=100):
         """
-        Deze functie is niet meer up to date
+        Deze functie test het tijdsverschil tussen mijn rng en numpy rng
         :param aantalConfiguraties: hoeveel configuraties er doorlopen moeten worden
         :param aantalAtomen: het aantal atomen per configuratie
         :return: niets want de waardes worden geprint
@@ -149,39 +158,14 @@ class LijstVanAtomen:
 
         stopwatchRNG = Stopwatch()
         stopwatchRNG.start()
-        x = abs(rng.rngmodule.rng(12345678))
-        y = abs(rng.rngmodule.rng(x))
-        z = abs(rng.rngmodule.rng(y))
 
-        xlijst = np.array(x)
-        ylijst = np.array(y)
-        zlijst = np.array(z)
-        for iterator in range(aantalConfiguraties -1): #De loop stopt bij aantal-1 want de eerste configuratie is hierboven gemaakt.
-            x = abs(rng.rngmodule.rng(z))
-            xlijst = np.append(xlijst,x)
-
-            y = abs(rng.rngmodule.rng(x))
-            ylijst = np.append(ylijst, y)
-
-            z = abs(rng.rngmodule.rng(y))
-            zlijst = np.append(zlijst, z)
-        rngLijst = np.vstack((xlijst,ylijst,zlijst))
+        xlijst = np.array(rng.rngmodule.rng(999,aantalAtomen,aantalConfiguraties))
 
         RNGtijd = stopwatchRNG.stop()
 
         print("De tijd die mijn RNG nodig heeft is (in seconden):")
         print(RNGtijd)
-
         self.checkIfDuplicates_1(xlijst)
-        self.checkIfDuplicates_1(ylijst)
-        self.checkIfDuplicates_1(zlijst)
-
-    def getLijstVanAtomen(self):
-        """
-        Deze functie is buiten gebruik geraakt.
-        :return:
-        """
-        return self.lijstVanAtomen #Dit geeft dus een lijst terug van 3 deellijsten, elk het aantal atomen groot.
 
     def checkIfDuplicates_1(self,listOfElems):
         """
@@ -190,7 +174,7 @@ class LijstVanAtomen:
         :return:
         """
         if len(listOfElems) == len(set(listOfElems)):
-            print("tis in orde")
+            print("Er zijn geen dubbele waardes")
         else:
             return print("niet in orde")
 
@@ -198,15 +182,8 @@ class LijstVanAtomen:
 zzz = LijstVanAtomen(5)
 
 #print("test van de loop")
-zzz.loopOverLijst(10,100)
+#zzz.loopOverLijst(100,100)
 #print("einde loop test")
 #print("tijd testen")
-#zzz.tijdtestenRNG()
+zzz.tijdtestenRNG()
 #print("einde")
-
-"""
-#Tijd testen  
-a= np.random.rand(1)
-zzz.tijdtestenkwadraat(100000,a)
-zzz.tijdtestenkwadraat(100000,a[0])
-"""
