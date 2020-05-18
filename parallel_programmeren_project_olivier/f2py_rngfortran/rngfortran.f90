@@ -19,7 +19,7 @@ contains
 	    z = seed		
 	    do stappen=1,aantalstappen
 		do atomen=1,3*aantalatomen			
-			rng(atomen) = modulo(z*z + ( a + b ),m)
+			rng(atomen) = modulo(z*z*a + b ,m)
 			z = rng(atomen)			
 		end do
 	    end do
