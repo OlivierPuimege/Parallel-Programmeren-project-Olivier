@@ -15,7 +15,7 @@ contains
 	    integer*8	:: atomen,stappen,z
  	    integer*8, dimension(3*aantalatomen) ::x
       
-            ! Middle Square Weyl Sequence PRNG
+            !kleine variant van de Middle Square Weyl Sequence PRNG
 	    z = seed		
 	    do stappen=1,aantalstappen
 		do atomen=1,3*aantalatomen			
